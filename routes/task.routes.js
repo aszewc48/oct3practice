@@ -14,14 +14,13 @@ router.post('/tasks', (req,res,next) => {
     .then(createdTask => {
         console.log(newTask)
         newTask=createdTask
-        // res.json({message: 'POST tasks works', task: createdTask})
-        Project.findByIdAndUpdate(projectId, {
-            $push: {tasks: createdTask._id}
+        return Project.findByIdAndUpdate(projectId, {
+            $push: {task: createdTask._id}
         }, {new: true })
+    })
             .then(updatedProject => {
                 res.json({message: 'POST tasks works', task: newTask, project: updatedProject})
             })
-    })
     .catch(err => console.log(err))
 
 })

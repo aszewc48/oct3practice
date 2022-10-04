@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 const Project = require('../models/Project.model')
+const Task = require('../models/Task.model')
 
 router.post('/projects', (req,res,next) => {
     console.log(req.body)
@@ -30,6 +31,7 @@ router.get('/projects', (req,res,next) => {
 router.get('/projects/:projectId', (req,res,next) => {
     const {projectId} = req.params
     Project.findById(projectId)
+        .populate('task')
         .then(foundProject => {
             res.json({message: 'GET projects/:projectId worked', projectId, project: foundProject})
         })
@@ -52,6 +54,7 @@ router.delete('/projects/:projectId', (req,res,next) => {
     Project.findByIdAndRemove(projectId)
     .then(deletedProject => {
         console.log(deletedProject)
+        Task.deleteMany({project: projectId}).then(() => {})
         res.json({message: 'DELETE projects/:projectId worked', projectId, project: deletedProject})
     })
     .catch(err => console.log(err))
