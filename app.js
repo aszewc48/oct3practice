@@ -1,8 +1,11 @@
-
+require('dotenv').config()
 const Express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const morgan = require('morgan')
+//const jwt = require('express-jwt')
+const {isAuthenticated} = require('./middlewares/jwt.middleware')
+
 
 mongoose.connect('mongodb://localhost:27017/projectManagement')
     .then(connectObject => {
@@ -18,8 +21,10 @@ app.use(cors({
 app.use(Express.json())
 const projectRoutes = require('./routes/project.routes')
 const taskRoutes = require('./routes/task.routes')
-app.use('/api', taskRoutes)
-app.use('/api', projectRoutes)
+const authRoutes = require('./routes/auth.routes')
+app.use('/api', isAuthenticated, taskRoutes)
+app.use('/api', isAuthenticated, projectRoutes)
+app.use('/auth', authRoutes)
 
 
 app.get('/', (req,res,next) => {

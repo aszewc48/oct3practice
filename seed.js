@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const Project = require('./models/Project.model')
 const Task = require('./models/Task.model')
+const User = require('./models/User.model')
 
 mongoose.connect('mongodb://localhost:27017/projectManagement')
     .then(connectObject => {
@@ -21,11 +22,18 @@ mongoose.connect('mongodb://localhost:27017/projectManagement')
     })
     .then(createdTask => {
         console.log(createdTask);
-    return mongoose.concection.close()
+    return User.create({
+        username: 'Adam',
+        password: 'password'
     })
+    .then(userCreated => {
+        console.log(userCreated)
+        mongoose.connection.close()
+    
+})
     .then(() => console.log('Connection successfully closed'))
     .catch(err => console.log('Error connecting to database:', err))
-
+    })
 // mongoose.connection.close()
 //     .then(() => console.log('connection closed'))
 //     .catch(err => console.log('Error closing connection', err))
